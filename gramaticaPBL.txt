@@ -1,0 +1,108 @@
+﻿
+"Start Symbol" = <start> 
+
+
+{String Chars} = {Printable} + {HT} - ["]
+
+
+!--------------------------Terminais--------------------------------
+
+
+
+ide    = {Letter}{AlphaNumeric}* | {Letter}
+       | {Letter}+'_'*{AlphaNumeric}*
+string = '"' {String Chars}* '"'
+int = {Number}+
+    | '-'{Number}+
+real ={Number}+'.'{Number}+
+    | '-'{Number}+'.'{Number}+
+boolean = 'true' | 'false'
+
+!---------------------------valores de retorno---------------------------
+<valor>       ::= ide | boolean | int | real | string
+               
+! ----------------------tipos de variaveis---------------------------
+tipo = 'int' | 'real' | 'boolean' | 'string'
+
+
+        
+! ----------------------bloco de variaveis---------------------------
+<var> ::= var '{''}'
+       | var '{'<parametro>'}'
+       |
+<ides> ::=  <valor>',' <ides>
+                   | ';'      
+! ----------------------bloco de constantes---------------------------
+<const> ::= const'{'<constaux>'}'
+<constaux> ::= <parametro2> '=' <valor> <ides> <constaux>
+            | 
+
+        
+
+! ----------------------grupo de variaveis---------------------------               
+<parametro> ::= tipo ide';' 
+             | <parametro>',' tipo ide';'
+              
+
+<parametro2> ::= tipo ide
+               |  <parametro2>',' ide
+
+
+incr = '++' | '--'
+mult = '*' | '/'
+soma = '+' | '-'
+log = '!' | '||' | '&&'
+rel = '>' | '<' | '>=' | '<=' | '=='
+
+!Logic Expression
+<log> ::= <log1>
+
+<log1> ::= <log1> log <log1> | <log2>
+
+<log2> ::= <log2> rel <log2> | <log3>
+
+<log3> ::= <exp>
+
+
+!Arithmetic Expression
+<exp> ::= <exp_1>
+
+<exp_1> ::= <exp_1> incr | incr <exp_1> | <exp_2>
+
+<exp_2> ::= <exp_2> mult <exp_2> | <exp_3>
+
+<exp_3> ::= <exp_3> soma <exp_3> | <exp_4>
+
+<exp_4> ::= '(' <exp_1> ')' | int | real | ide |  '(' <log1> ')' | boolean
+
+
+!-------------------------------bloco de declarações------------------------------------------------
+<declararG> ::= function tipo ide '('<parametro2>')''{'<codigo> 'return' <log>';' '}'
+            |  procedure ide '('<parametro2>')''{'<codigo>'}'
+            |
+            
+<if> ::= if '('<log>')' then '{'<codigo>'}' <else>
+<while> ::= while '('<log>')' '{'<codigo>'}'
+
+           
+               
+<else> ::= else '{'<codigo>'}' |  
+
+!---------------------------------corpo do codigo-----------------------------------------               
+<codigo> ::= <if> <codigo>
+          | <while> <codigo>
+          |
+          
+!struct
+!<STRUCT> ::= 'struct' ide '{'  '}'
+
+
+
+
+
+!---------------Codigo de inicio--------------------------------
+
+<start> ::= <declararG> <start>
+            | <const> <start>
+            | start '{'<codigo>'}'
+           
